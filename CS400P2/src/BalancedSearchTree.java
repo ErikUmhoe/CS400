@@ -124,12 +124,69 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	}
 
 	private void trinodeRestructure(Treenode<T> node) {
-		
+		if(node.parent.left == node && node.left != null)
+		{
+			if(node.parent.parent.left == node.parent)
+			{
+				Treenode<T> ggp = node.parent.parent;
+				node.right = node.parent;
+				ggp.left = node;
+				node.color = true;
+				node.right.color = false;
+				detectProblem(ggp);
+			}
+			else if(node.parent.parent.right == node.parent)
+			{
+				Treenode<T> ggp = node.parent.parent;
+				node.right = node.parent;
+				ggp.right = node;
+				node.color = true;
+				node.right.color = false;
+				node.right.parent = node;
+				node.left.parent = node;
+				detectProblem(ggp);
+			}
+		}
+		else if(node.parent.left == node && node.right != null)
+		{
+			if(node.parent.parent.left == node.parent)
+			{
+				Treenode<T> ggp = node.parent;
+				Treenode<T> child = node.right;
+				child.right = node.parent;
+				child.right.parent = child;
+				child.left = node;
+				node.parent = child;
+				ggp.left = child;
+				child.color = true;
+				child.left.color = false;
+				child.right.color = false;
+				detectProblem(ggp);
+				
+			}
+			
+			else if(node.parent.parent.right == node.parent)
+			{
+				Treenode<T> ggp = node.parent.parent;
+				Treenode<T> child = node.right;
+				child.right = node.parent;
+				child.right.parent = child;
+				child.left = node;
+				node.parent = child;
+				ggp.right = child;
+				detectProblem(ggp);
+			}
+		}
 		
 	}
 
-	private void recolor(Treenode<T> node) {
+	private void detectProblem(BalancedSearchTree<T>.Treenode<T> ggp) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	private void recolor(Treenode<T> parent) {
+
 		
 	}
 
