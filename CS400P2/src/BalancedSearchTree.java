@@ -1,15 +1,14 @@
-// starter class for a BalancedSearchTree
-// you may implement AVL, Red-Black, 2-3 Tree, or 2-3-4 Tree
-// be sure to include in class header which tree you have implemented
+// BalancedSearchTree
+// Red-Black Tree
 public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeADT<T> {
 
-	// inner node class used to store key items and links to other nodes
+	// Inner node class used to store key items and links to other nodes.
 	protected class Treenode<K extends Comparable<K>> {
 		K key;
 		Treenode<K> left;
 		Treenode<K> right;
 		Treenode<K> parent;
-		private boolean color; //Color of the node, red or black. If true - black, if false - red.
+		private boolean color; // Color of the node, red or black. If true - black, if false - red.
 		
 		public Treenode(K item) {
 			this(item,null,null, true);
@@ -22,6 +21,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			this.parent = null;
 		}
 		
+		// Looks up item in tree, returns true if found.
 		public boolean lookuphelper(T item) {
 			if(this.key.equals(item))
 				return true;
@@ -36,30 +36,25 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	protected Treenode<T> root;
 
 	public String inAscendingOrder() {
-		//TODO : must return comma separated list of keys in ascending order
+		// Return comma separated list of keys in ascending order.
 		String keys = getItems(root);
 		return keys;
 	}
 
 	public boolean isEmpty() {
-		//TODO return empty if there are no keys in structure
+		// Return empty if there are no keys in structure.
 		return root==null;
 	}
 
 	public int height() {
-		//TODO return the height of this tree
-		return 0; 
+		// Return the height of this tree
+		return heightHelper(root); 
 	}
 
 	public boolean lookup(T item) {
-		//TODO must return true if item is in tree, otherwise false
+		// Return true if item is in tree, otherwise false.
 		return root.lookuphelper(item);
 	}
-	
-	
-	
-
-
 
 	public void insert(T item) {
 		//TODO if item is null throw IllegalArgumentException, 
@@ -200,6 +195,46 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 
 		// NOTE: if you are unable to get delete implemented
 		// it will be at most 5% of the score for this program assignment
+		if(item == null)
+			return;
+		Treenode<T> node = findItem(root, item);
+		if(node == null)
+			return;
+		// If node has no children.
+		if(node.left == null && node.right == null)
+		{
+			if(node.parent.left == node)
+				node.parent.left = null;
+			else
+				node.parent.right = null;
+		}
+		// If node only has left child.
+		else if(node.left != null && node.right == null)
+		{
+			if(node.parent.left == node)
+				node.parent.left = node.left;
+			else
+				node.parent.right = node.left;
+		}
+		// If node only has right child.
+		else if(node.left == null && node.right != null)
+		{
+			if(node.parent.left == node)
+				node.parent.left = node.right;
+			else
+				node.parent.right = node.right;
+		}
+		// If node has both left and right child.
+		else
+		{
+			// Find the left most node of the right child.
+			Treenode<T> temp = leftMostNode(node.right);
+			// Delete the left most right child.
+			delete(temp.key);
+			// Replace this nodes key with the left most right child's key.
+			node.key = temp.key;
+		}
+		
 	}
 
 
@@ -214,6 +249,13 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		return node.key;
 	}
 	
+	// Finds the left most node of the tree.
+	private Treenode<T> leftMostNode(Treenode<T> node) {
+		if(node.left != null)
+			return leftMostNode(node.left);
+		return node;
+	}
+	
 	private String getItems (Treenode<T> node) {
 		String items = "";
 		if(node.left != null)
@@ -222,6 +264,28 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		if(node.right != null)
 			items += getItems(node.right);
 		return items;
+	}
+	
+	private Treenode<T> findItem (Treenode<T> node, T item) {
+		if(node.key.equals(item))
+			return node;
+		else if(node.key.compareTo(item) < 0 && node.left != null)
+			return findItem(node.left, item);
+		else if(node.right != null)
+			return findItem(node.right, item);
+		return null;
+	}
+	
+	private int heightHelper(Treenode<T> node) {
+		if (node == null)
+			return 0;
+		int lHeight = heightHelper(node.left);
+		int rHeight = heightHelper(node.right);
+		
+		if(lHeight > rHeight)
+			return lHeight + 1;
+		else
+			return rHeight + 1;
 	}
 
 }
