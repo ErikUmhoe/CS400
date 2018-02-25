@@ -5,6 +5,12 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 
 	// inner node class used to store key items and links to other nodes
 	protected class Treenode<K extends Comparable<K>> {
+		K key;
+		Treenode<K> left;
+		Treenode<K> right;
+		Treenode<K> parent;
+		private boolean color; //Color of the node, red or black. If true - black, if false - red.
+		
 		public Treenode(K item) {
 			this(item,null,null, true);
 		}
@@ -15,12 +21,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			this.color = color;
 			this.parent = null;
 		}
-		K key;
-		Treenode<K> left;
-		Treenode<K> right;
-		Treenode<K> parent;
-
-		private boolean color; //Color of the node, red or black. If true - black, if false - red.
+		
 		public boolean lookuphelper(T item) {
 			if(this.key.equals(item))
 				return true;
@@ -36,7 +37,8 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 
 	public String inAscendingOrder() {
 		//TODO : must return comma separated list of keys in ascending order
-		return "" ;
+		String keys = getItems(root);
+		return keys;
 	}
 
 	public boolean isEmpty() {
@@ -186,8 +188,10 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	}
 
 	private void recolor(Treenode<T> parent) {
-
-		
+		if(parent.parent != root)
+			parent.parent.color = false;
+		parent.parent.left.color = true;
+		parent.parent.right.color = true;
 	}
 
 	public void delete(T item) {
@@ -205,8 +209,19 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	private T leftMost(Treenode<T> node) {
 		// TODO return the key value of the left most node in this subtree
 		// or return node's key if node does not have a left child
+		if(node.left != null)
+			return leftMost(node.left);
 		return node.key;
+	}
+	
+	private String getItems (Treenode<T> node) {
+		String items = "";
+		if(node.left != null)
+			items += getItems(node.left);
+		items += node.key + ", ";
+		if(node.right != null)
+			items += getItems(node.right);
+		return items;
 	}
 
 }
-
