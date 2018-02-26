@@ -1,5 +1,20 @@
 import static org.junit.Assert.*;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS400 Spring 2018
+// PROJECT:          cs400_p2_201801
+// FILES:            TestSearchTree.java
+//                   SearchTreeADT.java
+//                   BalancedSearchTree.java
+//
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -329,4 +344,3 @@ public class TestSearchTree {
 		
 	}
 }
-
