@@ -129,8 +129,8 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			{
 				Treenode<T> ggp = node.parent.parent;
 				node.right = node.parent;
-				node.parent = ggp;
 				ggp.left = node;
+				node.parent = ggp;
 				node.color = true;
 				node.right.color = false;
 				detectProblem(ggp);
@@ -266,7 +266,10 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			delete(temp.key);
 			// Replace this nodes key with the left most right child's key.
 			node.key = temp.key;
+
 			//detectProblem(node);
+			detectProblem(node);
+
 		}
 		
 		
