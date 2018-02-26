@@ -220,8 +220,12 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		Treenode<T> node = findItem(root, item);
 		if(node == null)
 			return;
+		// If node is root with no children
+		if(node == root && node.left == null 
+				&& node.right == null)
+			root = null;
 		// If node has no children.
-		if(node.left == null && node.right == null)
+		else if(node.left == null && node.right == null)
 		{
 			if(node.parent.left == node)
 				node.parent.left = null;
@@ -253,9 +257,9 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			delete(temp.key);
 			// Replace this nodes key with the left most right child's key.
 			node.key = temp.key;
+			detectProblem(node);
 		}
 		
-		detectProblem(node);
 		
 	}
 
