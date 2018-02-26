@@ -53,6 +53,8 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 
 	public boolean lookup(T item) {
 		// Return true if item is in tree, otherwise false.
+		if(root == null)
+			return false;
 		return root.lookuphelper(item);
 	}
 
@@ -69,7 +71,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			Treenode<T> node = root;
 			while(node != null)
 			{
-				if(node.key.compareTo(item) < 0)
+				if(node.key.compareTo(item) > 0)
 				{
 					if(node.left == null)
 					{
@@ -77,9 +79,9 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 						node.left.parent = node;
 						if(node.left.color == false && node.color == false)
 						{
-							if(node.parent.right==node && node.parent.left == null)
+							if(node.parent.left == null && node.parent.right == node)
 								trinodeRestructure(node);
-							else if(node.parent.left == node && node.parent.right == null)
+							else if(node.parent.right == null && node.parent.left == node)
 								trinodeRestructure(node);
 							else if(node.parent.left == node && node.parent.right != null)
 								recolor(node);
@@ -87,15 +89,14 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 								recolor(node);
 								
 						}
-						
-						
+						node = null;
 					}
 					
 					else
 						node = node.left;
 				}
 				
-				else if(node.key.compareTo(item) > 0)
+				else if(node.key.compareTo(item) < 0)
 				{
 					if(node.right == null)
 					{
@@ -103,15 +104,16 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 						node.right.parent = node;
 						if(node.right.color == false && node.color == false)
 						{
-							if(node.parent.right==node && node.parent.left == null)
+							if(node.parent.left == null && node.parent.right == node)
 								trinodeRestructure(node);
-							else if(node.parent.left == node && node.parent.right == null)
+							else if(node.parent.right == null && node.parent.left == node)
 								trinodeRestructure(node);
 							else if(node.parent.left == node && node.parent.right != null)
 								recolor(node);
 							else if(node.parent.right == node && node.parent.right != null)
 								recolor(node);
 						}
+						node = null;
 					}
 					else
 						node = node.right;
@@ -127,6 +129,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			{
 				Treenode<T> ggp = node.parent.parent;
 				node.right = node.parent;
+				node.parent = ggp;
 				ggp.left = node;
 				node.color = true;
 				node.right.color = false;
@@ -137,6 +140,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 				Treenode<T> ggp = node.parent.parent;
 				node.right = node.parent;
 				ggp.right = node;
+				node.parent = ggp;
 				node.color = true;
 				node.right.color = false;
 				node.right.parent = node;
@@ -155,6 +159,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 				child.left = node;
 				node.parent = child;
 				ggp.left = child;
+				child.parent = ggp;
 				child.color = true;
 				child.left.color = false;
 				child.right.color = false;
@@ -169,6 +174,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 				child.right = node.parent;
 				child.right.parent = child;
 				child.left = node;
+				child.parent = ggp;
 				node.parent = child;
 				ggp.right = child;
 				detectProblem(ggp);
@@ -177,9 +183,29 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		
 	}
 
-	private void detectProblem(BalancedSearchTree<T>.Treenode<T> ggp) {
-		// TODO Auto-generated method stub
-		
+	private void detectProblem(Treenode<T> node) {
+		if(node.parent != null && node.parent.parent != null)
+		{
+			if(!node.color && !node.parent.color)
+			{
+				if(node.parent.parent.left == node.parent)
+				{
+					if(node.parent.parent.right == null 
+							|| node.parent.parent.right.color)
+						trinodeRestructure(node);
+					else if(!node.parent.parent.right.color)
+						recolor(node);
+				}
+				else if(node.parent.parent.right == node.parent) 
+				{
+					if(node.parent.parent.left == null
+							|| node.parent.parent.left.color)
+						trinodeRestructure(node);
+					else if(!node.parent.parent.left.color)
+						recolor(node);
+				}
+			}
+		}
 	}
 
 	private void recolor(Treenode<T> parent) {
@@ -187,6 +213,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			parent.parent.color = false;
 		parent.parent.left.color = true;
 		parent.parent.right.color = true;
+		detectProblem(parent);
 	}
 
 	public void delete(T item) {
@@ -197,14 +224,20 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		// it will be at most 5% of the score for this program assignment
 		if(item == null)
 			return;
+		if(isEmpty())
+			return;
 		Treenode<T> node = findItem(root, item);
 		if(node == null)
 			return;
+		// If node is root with no children
+		if(node == root && node.left == null 
+				&& node.right == null)
+			root = null;
 		// If node has no children.
-		if(node.left == null && node.right == null)
+		else if(node.left == null && node.right == null)
 		{
 			if(node.parent.left == node)
-				node.parent.left = null;
+				node.parent.left = null;	
 			else
 				node.parent.right = null;
 		}
@@ -233,7 +266,9 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			delete(temp.key);
 			// Replace this nodes key with the left most right child's key.
 			node.key = temp.key;
+			//detectProblem(node);
 		}
+		
 		
 	}
 
@@ -242,7 +277,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	// in a sub-tree with "node" as its root
 	// PRE-CONDITION: node is not null
 	private T leftMost(Treenode<T> node) {
-		// TODO return the key value of the left most node in this subtree
+		// return the key value of the left most node in this subtree
 		// or return node's key if node does not have a left child
 		if(node.left != null)
 			return leftMost(node.left);
@@ -256,8 +291,16 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		return node;
 	}
 	
+	
+	/**
+	 * 
+	 * @param node is the root
+	 * @return String containing all of the nodes in order
+	 */
 	private String getItems (Treenode<T> node) {
 		String items = "";
+		if(node == null)
+			return items;
 		if(node.left != null)
 			items += getItems(node.left);
 		items += node.key + ", ";
@@ -266,26 +309,37 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		return items;
 	}
 	
+	/**
+	 * 
+	 * @param node is the root first, then recursively searches tree
+	 * @param item is the item being looked for in the tree
+	 * @return null if item is not found, otherwise returns item
+	 */
 	private Treenode<T> findItem (Treenode<T> node, T item) {
 		if(node.key.equals(item))
 			return node;
-		else if(node.key.compareTo(item) < 0 && node.left != null)
+		else if(node.key.compareTo(item) > 0 && node.left != null)
 			return findItem(node.left, item);
 		else if(node.right != null)
 			return findItem(node.right, item);
 		return null;
 	}
 	
+	/**
+	 * 
+	 * @param node is at first the root, then recursively perculates down the tree
+	 * @return the high of the tree as an integer
+	 */
 	private int heightHelper(Treenode<T> node) {
 		if (node == null)
 			return 0;
-		int lHeight = heightHelper(node.left);
-		int rHeight = heightHelper(node.right);
 		
-		if(lHeight > rHeight)
-			return lHeight + 1;
+		int heightLeft = 1 + heightHelper(node.left);
+		int heightRight = 1 + heightHelper(node.right);
+		if(heightLeft > heightRight)
+			return heightLeft;
 		else
-			return rHeight + 1;
+			return heightRight;
+		
 	}
-
 }
