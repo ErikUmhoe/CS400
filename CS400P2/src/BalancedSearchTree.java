@@ -177,9 +177,29 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		
 	}
 
-	private void detectProblem(BalancedSearchTree<T>.Treenode<T> ggp) {
-		// TODO Auto-generated method stub
-		
+	private void detectProblem(Treenode<T> node) {
+		if(node.parent != null && node.parent.parent != null)
+		{
+			if(!node.color && !node.parent.color)
+			{
+				if(node.parent.parent.left == node.parent)
+				{
+					if(node.parent.parent.right == null 
+							|| node.parent.parent.right.color)
+						trinodeRestructure(node);
+					else if(!node.parent.parent.right.color)
+						recolor(node);
+				}
+				else if(node.parent.parent.right == node.parent) 
+				{
+					if(node.parent.parent.left == null
+							|| node.parent.parent.left.color)
+						trinodeRestructure(node);
+					else if(!node.parent.parent.left.color)
+						recolor(node);
+				}
+			}
+		}
 	}
 
 	private void recolor(Treenode<T> parent) {
@@ -234,6 +254,8 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			// Replace this nodes key with the left most right child's key.
 			node.key = temp.key;
 		}
+		
+		detectProblem(node);
 		
 	}
 
