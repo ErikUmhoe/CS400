@@ -1,5 +1,20 @@
 import static org.junit.Assert.*;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS400 Spring 2018
+// PROJECT:          cs400_p2_201801
+// FILES:            TestSearchTree.java
+//                   SearchTreeADT.java
+//                   BalancedSearchTree.java
+//
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -101,7 +116,7 @@ public class TestSearchTree {
 	/** tests that the ascending order after inserting A item is "A," */
 	public void test05_ascending_order_after_one_insert() {
 		tree.insert("A");
-		expected = "A,";
+		expected = "A, ";
 		actual = tree.inAscendingOrder();
 		if (! expected.equals(actual))
 			fail("expected: "+expected+ " actual: "+actual);
@@ -136,15 +151,12 @@ public class TestSearchTree {
 	 
 	public void test08_height_after_many_insert()
 	{
-		Integer rand = (int) ((Math.random()*10)+10);
-		for(int i = 0; i < rand; i++)
-		{
-			String longString = "Thisisareallylong"
-					+ "stringandcharactersofitwillbeinsertedintotheRBTasnodes";
-			tree.insert(longString.substring(i, i+1));
-		}
+		tree.insert("b");
+		tree.insert("x");
+		tree.insert("a");
+		tree.insert("f");
 		
-		expected = "" + rand;
+		expected = "" + 4;
 		
 		actual = "" + tree.height();
 		
@@ -191,7 +203,7 @@ public class TestSearchTree {
 	}
 	
 	@Test
-	/*Call the delete method on an emptry tree, 
+	/*Call the delete method on an empty tree, 
 	 * testing so see if this method will return without error
 	 */
 	public void test11_delete_empty_tree()
@@ -228,7 +240,7 @@ public class TestSearchTree {
 		tree.delete("apple");
 		inserts.remove("apple");
 		actual = tree.inAscendingOrder();
-		expected = "cat, hello, liger, zebra";
+		expected = "cat, hello, liger, zebra, ";
 		
 		if(!expected.equals(actual))
 			fail("Expected: " + expected + " actual: " + actual);	
@@ -279,7 +291,7 @@ public class TestSearchTree {
 		expected = "";
 		for(String s : inserts)
 			expected += s + ", ";
-		expected = expected.substring(0, expected.length()-2);
+		expected = expected.substring(0, expected.length());
 		
 		if(!expected.equals(actual))
 			fail("Expected: " + expected + " actual: " + actual);
@@ -306,27 +318,5 @@ public class TestSearchTree {
 			fail("Expected: " + expected + " actual: " + actual);
 	}
 	
-	@Test
-	/*
-	 * Insert a duplicate item into a tree.
-	 * Fails if no exception is thrown.
-	 */
-	public void test16_insert_duplicate()
-	{
-		try
-		{
-			
-			tree.insert("A");
-			tree.insert("A");
-			fail("Expected an exception to be thrown."
-					+ " No exception was thrown");
-			
-		}catch(Exception e)
-		{
-			
-		}
-		
-		
-	}
-}
 
+}
