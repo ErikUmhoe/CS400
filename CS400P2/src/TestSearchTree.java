@@ -31,10 +31,10 @@ import org.junit.Test;
 //                   SearchTreeADT.java
 //                   BalancedSearchTree.java
 //
-// USER:             deppeler
+// USER:             Erik Umhoefer and Nick Stoffel
 //
 // Instructor:       Deb Deppeler (deppeler@cs.wisc.edu)
-// Bugs:             no known bugs, but not complete either
+// Bugs:             no known bugs
 //
 // 2018 Feb 8, 2018 5:13:18 PM TestSearchTree.java 
 //////////////////////////// 80 columns wide //////////////////////////////////
@@ -155,8 +155,13 @@ public class TestSearchTree {
 		tree.insert("x");
 		tree.insert("a");
 		tree.insert("f");
+		tree.insert("z");
+		tree.insert("g");
+		tree.insert("d");
+		tree.insert("k");
 		
-		expected = "" + 4;
+		
+		expected = "" + 5;
 		
 		actual = "" + tree.height();
 		

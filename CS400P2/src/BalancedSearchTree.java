@@ -1,5 +1,19 @@
 // BalancedSearchTree
 // Red-Black Tree
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS400 Spring 2018
+// PROJECT:          cs400_p2_201801
+// FILES:            TestSearchTree.java
+//                   SearchTreeADT.java
+//                   BalancedSearchTree.java
+//
+// USER:             Erik Umhoefer and Nick Stoffel
+//
+// Instructor:       Deb Deppeler (deppeler@cs.wisc.edu)
+// Bugs:             no known bugs
+//
+// 2018 Feb 8, 2018 5:13:18 PM BalancedSearchTree.java 
+//////////////////////////// 80 columns wide //////////////////////////////////
 public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeADT<T> {
 
 	// Inner node class used to store key items and links to other nodes.
@@ -7,7 +21,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		K key;
 		Treenode<K> left;
 		Treenode<K> right;
-		Treenode<K> parent;
+		Treenode<K> parent;	//Reference to the parent node
 		private boolean color; // Color of the node, red or black. If true - black, if false - red.
 		
 		public Treenode(K item) {
@@ -33,24 +47,45 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		}
 	}
 
-	protected Treenode<T> root;
+	protected Treenode<T> root; //root of the tree
 
+	/*
+	 * (non-Javadoc)
+	 * @see SearchTreeADT#inAscendingOrder()
+	 * Returns a string of the keys of the nodes of the BST in ascending order
+	 * Seperated by commas
+	 */
 	public String inAscendingOrder() {
 		// Return comma separated list of keys in ascending order.
 		String keys = getItems(root);
 		return keys;
 	}
-
+	
+	/*
+	 * (non-Javadoc)
+	 * @see SearchTreeADT#isEmpty()
+	 * Returns whether the tree is empty or not
+	 */
 	public boolean isEmpty() {
 		// Return empty if there are no keys in structure.
 		return root==null;
 	}
-
+	/*
+	 * (non-Javadoc)
+	 * @see SearchTreeADT#height()
+	 * Returns the height of the tree
+	 */
 	public int height() {
 		// Return the height of this tree
 		return heightHelper(root); 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see SearchTreeADT#lookup(java.lang.Comparable)
+	 * @param item is the key to be found
+	 * Finds the node with the key item
+	 */
 	public boolean lookup(T item) {
 		// Return true if item is in tree, otherwise false.
 		if(root == null)
@@ -58,6 +93,13 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		return root.lookuphelper(item);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see SearchTreeADT#insert(java.lang.Comparable)
+	 * @param item is the key of the item to be inserted
+	 * Inserts node with key item at the correct location of the BST
+	 * Then fixes any RBT Property violations
+	 */
 	public void insert(T item) {
 		//TODO if item is null throw IllegalArgumentException, 
 		// otherwise insert into balanced search tree
@@ -122,6 +164,9 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		}
 	}
 
+	/*
+	 * @param parent node of the subtree. The child and parent both are red - RBT property violation
+	 */
 	private void trinodeRestructure(Treenode<T> node) {
 		if(node.parent.left == node && node.left != null)
 		{
@@ -183,6 +228,9 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		
 	}
 
+	/*
+	 * Detects whether there is a red black tree property violation
+	 */
 	private void detectProblem(Treenode<T> node) {
 		if(node.parent != null && node.parent.parent != null)
 		{
@@ -190,17 +238,21 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			{
 				if(node.parent.parent.left == node.parent)
 				{
+					//If grandparent's other child is null - trinode restructure
 					if(node.parent.parent.right == null 
 							|| node.parent.parent.right.color)
 						trinodeRestructure(node);
+					//If grandparent's other child is not null - recolor
 					else if(!node.parent.parent.right.color)
 						recolor(node);
 				}
 				else if(node.parent.parent.right == node.parent) 
 				{
+					//If grandparent's other child is null - trinode restructure
 					if(node.parent.parent.left == null
 							|| node.parent.parent.left.color)
 						trinodeRestructure(node);
+					//If grandparent's other child is not null - recolor
 					else if(!node.parent.parent.left.color)
 						recolor(node);
 				}
@@ -208,6 +260,10 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		}
 	}
 
+	/*
+	 * Recoloring fix for the BST. Switches the colors of the parent, grand parent, and child
+	 * Then calls detect problem on the new parent to perculate fixes up the tree
+	 */
 	private void recolor(Treenode<T> parent) {
 		if(parent.parent != root)
 			parent.parent.color = false;
@@ -216,6 +272,12 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		detectProblem(parent);
 	}
 
+	/*
+	 * @param item is the key to look for and then delete
+	 * @see SearchTreeADT#delete(java.lang.Comparable)
+	 * Basic BST deletion, removes the node with the same key as the param
+	 * If there is no node with the key of item, nothing occurs
+	 */
 	public void delete(T item) {
 		//TODO if item is null or not found in tree, return without error
 		// else remove this item key from the tree and rebalance
@@ -337,12 +399,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 		if (node == null)
 			return 0;
 		
-		int heightLeft = 1 + heightHelper(node.left);
-		int heightRight = 1 + heightHelper(node.right);
-		if(heightLeft > heightRight)
-			return heightLeft;
 		else
-			return heightRight;
-		
+			return Math.max(heightHelper(node.left), heightHelper(node.right)) + 1;
 	}
 }
