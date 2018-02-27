@@ -101,8 +101,6 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 	 * Then fixes any RBT Property violations
 	 */
 	public void insert(T item) {
-		//TODO if item is null throw IllegalArgumentException, 
-		// otherwise insert into balanced search tree
 		
 		if(item == null)
 			throw new IllegalArgumentException();
@@ -192,6 +190,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 				node.left.parent = node;
 				detectProblem(ggp);
 			}
+			root.color = true;
 		}
 		else if(node.parent.left == node && node.right != null)
 		{
@@ -224,6 +223,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 				ggp.right = child;
 				detectProblem(ggp);
 			}
+			root.color = true;
 		}
 		
 	}
@@ -269,6 +269,7 @@ public class BalancedSearchTree<T extends Comparable<T>> implements SearchTreeAD
 			parent.parent.color = false;
 		parent.parent.left.color = true;
 		parent.parent.right.color = true;
+		root.color = true;
 		detectProblem(parent);
 	}
 
