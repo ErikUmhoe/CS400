@@ -29,7 +29,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(key == null)
     		throw new NullPointerException();
     	numItems++;
-    	if(numItems >= maxEntries)
+    	if(numItems >= table.length)
     	{
     		expandTable();
     	}
@@ -145,7 +145,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
     	
-    	return key1 % maxEntries;
+    	return key1 % table.length;
     }
     
    /*
@@ -161,7 +161,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	   {
 		   
 		   key1 += i*key1;
-		   key1 = key1%maxEntries;
+		   key1 = key1%table.length;
 		   i++;
 	   }
 	   System.out.println("Hash Index: " + key1);
@@ -181,7 +181,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	   {
 		   key1+= (int)((int)str.charAt(i) * Math.pow(2, i));
 	   }
-	   return key1 % maxEntries;
+	   return key1 % table.length;
    }
 }
 class HashNode<K,V>
