@@ -36,14 +36,47 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     		treemap.put(s, s);
     	}
     	long endTimeTree = System.currentTimeMillis();
+    	long startTimeHash = System.currentTimeMillis();
+    	HashTable hash = new HashTable(10,.8);
+    	for(String s : inputData)
+    		hash.put(s, s);
+    	long endTimeHash = System.currentTimeMillis();
     	
-    	System.out.println(endTimeTree - startTimeTree);
+    	System.out.println("Time of a TreeMap to insert " + 
+    	inputData.size() + " items: " + (endTimeTree - startTimeTree));
+    	
+    	System.out.println("Time of a Hash Table to insert " + 
+    	    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
    
     }
 
     @Override
     public void compareDeletion() {
-        //TODO: Complete this method
+    	TreeMap treemap = new TreeMap();
+    	for(String s : inputData)
+    	{
+    		treemap.put(s, s);
+    	}
+    	int i = 0;
+    	long startTimeTree = System.currentTimeMillis();
+    	while(!treemap.isEmpty())
+    		treemap.remove(inputData.get(i));
+    	long endTimeTree = System.currentTimeMillis();
+    	
+    	HashTable hash = new HashTable(1000,.8);
+    	for(String s : inputData)
+    		hash.put(s, s);
+    	i = 0;
+    	long startTimeHash = System.currentTimeMillis();
+    	while(!hash.isEmpty())
+    		hash.remove(inputData.get(i));
+    	long endTimeHash = System.currentTimeMillis();
+    	
+    	System.out.println("Time of a TreeMap to delete " + 
+    	    	inputData.size() + " items: " + (endTimeTree - startTimeTree));
+    	    	
+    	    	System.out.println("Time of a Hash Table to delete " + 
+    	    	    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
     }
 
     @Override
@@ -70,4 +103,5 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
         }
         br.close();
     }
+    
 }

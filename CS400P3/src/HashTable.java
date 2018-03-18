@@ -12,7 +12,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	public HashTable(int initialCapacity, double loadFactor)
 	{
 		table = new HashNode[initialCapacity];
-		maxEntries = (int) (initialCapacity * loadFactor);
+		maxEntries = initialCapacity;
 		numItems = 0;
 	}
 	
@@ -29,7 +29,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(key == null)
     		throw new NullPointerException();
     	numItems++;
-    	if(numItems >= table.length)
+    	if(numItems >= table.length || numItems >= maxEntries)
     	{
     		expandTable();
     	}
@@ -55,14 +55,30 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
      */
     private void expandTable() {
 		HashNode[] temp = new HashNode[table.length * 2 + 1];
+		maxEntries = maxEntries * 2 + 1;
+		
+		
 		
 		for(int i = 0; i < table.length; i++)
 		{
 			if(table[i]!= null)
-				temp[hashFunction((K) table[i].getKey())] =  table[i];
+			{
+				int key1 = hashFunction((K) table[i].getKey());
+				if(temp[key1] != null)
+				{
+					 key1++;
+					 while(temp[key1] != null)
+					   {
+						   
+						   key1++;
+						   key1 = key1%maxEntries;
+					   }
+				
+				}
+				temp[key1] = table[i];
+			}
 		}
-		maxEntries = maxEntries * 2 + 1;
-		
+		table = temp;
 	}
 
     /**
@@ -82,12 +98,10 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         if(table[key1].getKey() == key)
         	return (V) table[key1].getValue();
         else{
-        	key1 = secondHashFunction(key);
-        	int i = 0;
+        	key1++;
         	while(table[key1].getKey() != key)
         	{
-        		key1 += i*key1;
-        		i++;
+        		key1++;
         	}
         	return (V) table[key1].getValue();
         }
@@ -101,7 +115,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     @Override
     public boolean isEmpty() {
         
-        return table == null;
+        return numItems>0;
     }
 
     @Override
@@ -109,7 +123,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
        
     	int key1 = hashFunction(key);
     	if(table[key1].getKey() != key){
-        	key1 = secondHashFunction(key);
+        	key1++;
         	int i = 0;
         	while(table[key1].getKey() != key)
         	{
@@ -119,6 +133,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         }
     	V temp = (V) table[key1].getValue();
     	table[key1] = null; 
+    	numItems--;
         return temp;
     }
 
@@ -145,7 +160,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
     	
-    	return key1 % table.length;
+    	return key1 % maxEntries;
     }
     
    /*
@@ -155,14 +170,12 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     */
    private void handleCollision(K key, V value)
    {
-	   int key1 = secondHashFunction(key);
-	   int i = 0;
+	   int key1 = hashFunction(key);
 	   while(table[key1] != null)
 	   {
 		   
-		   key1 += i*key1;
-		   key1 = key1%table.length;
-		   i++;
+		   key1 ++;
+		   key1 = key1%maxEntries;
 	   }
 	   System.out.println("Hash Index: " + key1);
 	   table[key1] = new HashNode(key, value);
@@ -173,16 +186,16 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     * @return is the integer hash index / table index of the item inserted
     * Creates a hash index by doing the algorithm of hashFunction(K key) in reverse order
     */
-   private int secondHashFunction(K key)
-   {
-	   String str = key.toString();
-	   int key1 = 0;
-	   for(int i = str.length()-1; i >= 0; i--)
-	   {
-		   key1+= (int)((int)str.charAt(i) * Math.pow(2, i));
-	   }
-	   return key1 % table.length;
-   }
+//   private int secondHashFunction(K key)
+//   {
+//	   String str = key.toString();
+//	   int key1 = 0;
+//	   for(int i = str.length()-1; i >= 0; i--)
+//	   {
+//		   key1+= (int)((int)str.charAt(i) * Math.pow(2, i));
+//	   }
+//	   return key1 % maxEntries;
+//   }
 }
 class HashNode<K,V>
 {
