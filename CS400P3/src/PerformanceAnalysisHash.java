@@ -14,16 +14,12 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     public PerformanceAnalysisHash() throws IOException{
     	reports = new ArrayList<>();
     	loadFiles("data_details.txt");
-//    	for(String s: files)
-//    	{
-//    		loadData(s);
-//    		curFile = s;
-//    		compareDataStructures();
-//    	}
-    	System.out.println(files.get(2));
-    	loadData(files.get(2));
-    	curFile = files.get(2);
-    	compareInsertion();
+    	for(String s: files)
+    	{
+    		loadData(s);
+    		curFile = s;
+    		compareDataStructures();
+    	}
     }
 
     public PerformanceAnalysisHash(String details_filename){
