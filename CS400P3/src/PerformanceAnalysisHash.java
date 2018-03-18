@@ -9,7 +9,7 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     private ArrayList<String> inputData;
     
     public PerformanceAnalysisHash() throws IOException{
-    	loadData("data/StringSmall.txt");
+    	loadData("data/StringLarge.txt");
     	
     }
 
@@ -37,9 +37,12 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	}
     	long endTimeTree = System.currentTimeMillis();
     	long startTimeHash = System.currentTimeMillis();
-    	HashTable hash = new HashTable(10,.8);
+    	HashTable hash = new HashTable(10000,.8);
     	for(String s : inputData)
+    	{
     		hash.put(s, s);
+    		System.out.println(s);
+    	}
     	long endTimeHash = System.currentTimeMillis();
     	
     	System.out.println("Time of a TreeMap to insert " + 
@@ -77,7 +80,6 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	{
     		hash.remove(inputData.get(i));
     		i++;
-    		System.out.println(i);
     	}
     	long endTimeHash = System.currentTimeMillis();
     	
