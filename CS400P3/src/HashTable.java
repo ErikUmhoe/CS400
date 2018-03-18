@@ -103,6 +103,15 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     public V remove(K key) {
        
     	int key1 = hashFunction(key);
+    	if(table[key1].getKey() != key){
+        	key1 = secondHashFunction(key);
+        	int i = 0;
+        	while(table[key1].getKey() != key)
+        	{
+        		key1 += i*key1;
+        		i++;
+        	}
+        }
     	V temp = (V) table[key1].getValue();
     	table[key1] = null; 
         return temp;
@@ -130,6 +139,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	{
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
+    	System.out.println("Hash Index: " + key1%maxEntries);
     	return key1 % maxEntries;
     }
     
