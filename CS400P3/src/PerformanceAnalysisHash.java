@@ -60,8 +60,13 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	int i = 0;
     	long startTimeTree = System.currentTimeMillis();
     	while(!treemap.isEmpty())
+    	{
     		treemap.remove(inputData.get(i));
+    		i++;
+    	}
     	long endTimeTree = System.currentTimeMillis();
+    	System.out.println("Time of a TreeMap to delete " + 
+    			inputData.size() + " items: " + (endTimeTree - startTimeTree));
     	
     	HashTable hash = new HashTable(1000,.8);
     	for(String s : inputData)
@@ -69,14 +74,15 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	i = 0;
     	long startTimeHash = System.currentTimeMillis();
     	while(!hash.isEmpty())
+    	{
     		hash.remove(inputData.get(i));
+    		i++;
+    		System.out.println(i);
+    	}
     	long endTimeHash = System.currentTimeMillis();
     	
-    	System.out.println("Time of a TreeMap to delete " + 
-    	    	inputData.size() + " items: " + (endTimeTree - startTimeTree));
-    	    	
-    	    	System.out.println("Time of a Hash Table to delete " + 
-    	    	    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
+    	System.out.println("Time of a Hash Table to delete " + 
+    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
     }
 
     @Override
