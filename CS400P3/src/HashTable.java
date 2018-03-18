@@ -37,7 +37,11 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(table[key1] != null)				
     		handleCollision(key, value);
     	else
+    	{
     		table[key1] = new HashNode(key, value);
+    		System.out.println("Hash Index: " + key1);
+    	}
+    	
     	return (V) table[key1].getValue();
     	
     	
@@ -52,9 +56,10 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     private void expandTable() {
 		HashNode[] temp = new HashNode[table.length * 2 + 1];
 		
-		for(int i = 0; i < maxEntries; i++)
+		for(int i = 0; i < table.length; i++)
 		{
-			temp[hashFunction((K) table[i].getKey())] =  table[i];
+			if(table[i]!= null)
+				temp[hashFunction((K) table[i].getKey())] =  table[i];
 		}
 		maxEntries = maxEntries * 2 + 1;
 		
@@ -139,7 +144,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	{
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
-    	System.out.println("Hash Index: " + key1%maxEntries);
+    	
     	return key1 % maxEntries;
     }
     
@@ -156,8 +161,10 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	   {
 		   
 		   key1 += i*key1;
+		   key1 = key1%maxEntries;
 		   i++;
 	   }
+	   System.out.println("Hash Index: " + key1);
 	   table[key1] = new HashNode(key, value);
    }
    
