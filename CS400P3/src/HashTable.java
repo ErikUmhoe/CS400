@@ -5,13 +5,15 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     /* Instance variables and constructors
      */
 
-	ArrayList<HashNode> table;
+	HashNode[] table;
 	int maxEntries;
+	int numItems;
 	
 	public HashTable(int initialCapacity, double loadFactor)
 	{
-		table = new ArrayList<HashNode>(initialCapacity);
+		table = new HashNode[initialCapacity];
 		maxEntries = (int) (initialCapacity * loadFactor);
+		numItems = 0;
 	}
 	
 	
@@ -26,16 +28,17 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     public V put(K key, V value) {
     	if(key == null)
     		throw new NullPointerException();
-    	if(maxEntries <= table.size())
+    	numItems++;
+    	if(numItems >= maxEntries)
     	{
     		expandTable();
     	}
     	int key1 = hashFunction(key);			//key1 is the hashIndex / table index
-    	if(table.get(key1) != null)				
+    	if(table[key1] != null)				
     		handleCollision(key, value);
     	else
-    		table.set(key1, new HashNode(key, value));
-    	return (V) table.get(key1).getValue();
+    		table[key1] = new HashNode(key, value);
+    	return (V) table[key1].getValue();
     	
     	
     	
@@ -47,11 +50,11 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
      * Then rehashes all the values and assigns them into the new hashtable
      */
     private void expandTable() {
-		ArrayList<HashNode> temp = new ArrayList<HashNode>(table.size() * 2 + 1);
+		HashNode[] temp = new HashNode[table.length * 2 + 1];
 		
 		for(int i = 0; i < maxEntries; i++)
 		{
-			temp.set(hashFunction((K) table.get(i).getKey()),  table.get(i));
+			temp[hashFunction((K) table[i].getKey())] =  table[i];
 		}
 		maxEntries = maxEntries * 2 + 1;
 		
@@ -62,16 +65,27 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
      */
     @Override
     public void clear() {
-      for(int i = 0; i < table.size(); i++)
+      for(int i = 0; i < table.length; i++)
       {
-    	  table.set(i, null);
+    	  table[i] =  null;
       }
     }
 
     @Override
     public V get(K key) {
         int key1 = hashFunction(key);
-        return (V) table.get(key1).getValue();
+        if(table[key1].getKey() == key)
+        	return (V) table[key1].getValue();
+        else{
+        	key1 = secondHashFunction(key);
+        	int i = 0;
+        	while(table[key1].getKey() != key)
+        	{
+        		key1 += i*key1;
+        		i++;
+        	}
+        	return (V) table[key1].getValue();
+        }
         
     }
     
@@ -82,24 +96,32 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     @Override
     public boolean isEmpty() {
         
-        return table.isEmpty();
+        return table == null;
     }
 
     @Override
     public V remove(K key) {
        
     	int key1 = hashFunction(key);
-    	V temp = (V) table.get(key1).getValue();
-    	table.set(key1, null); 
+    	V temp = (V) table[key1].getValue();
+    	table[key1] = null; 
         return temp;
     }
 
     @Override
     public int size() {
        
-        return table.size();
+        return numItems;
     }
     
+    
+    /*
+     * @param key is the key of the item to be inserted into the hashtable
+     * @return is an integer hash index / location of the item in the hash table
+     * Takes the toString of the key and creates a hashcode by extracting each character's
+     * ASCII code and multiplying it by increasing powers of two, then folding these parts
+     * and dividing it by the maxEntries / table size to ensure proper wrapping
+     */
     private int hashFunction(K key)
     {
     	String str = key.toString();
@@ -111,19 +133,29 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	return key1 % maxEntries;
     }
     
+   /*
+    * Helper method for put(K key, V value) - handles collisions by double hashing
+    * @param key is the key of the item to be inserted into the hash table
+    * @param value is the value of the item to be inserted into the hash table
+    */
    private void handleCollision(K key, V value)
    {
 	   int key1 = secondHashFunction(key);
 	   int i = 0;
-	   while(table.get(key1) != null)
+	   while(table[key1] != null)
 	   {
 		   
 		   key1 += i*key1;
 		   i++;
 	   }
-	   table.set(key1, new HashNode(key, value));
+	   table[key1] = new HashNode(key, value);
    }
    
+   /*
+    * @param key is the key of the value to be inserted into the hashtable
+    * @return is the integer hash index / table index of the item inserted
+    * Creates a hash index by doing the algorithm of hashFunction(K key) in reverse order
+    */
    private int secondHashFunction(K key)
    {
 	   String str = key.toString();
