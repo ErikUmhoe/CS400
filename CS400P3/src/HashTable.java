@@ -34,8 +34,11 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     		expandTable();
     	}
     	int key1 = hashFunction(key);			//key1 is the hashIndex / table index
-    	if(table[key1] != null || table[key1].getKey() != "SENTINEL")				
-    		handleCollision(key, value);
+    	if(table[key1] != null)
+    	{
+    		if(!table[key1].getKey().equals("SENTINEL"))
+    			handleCollision(key, value);
+    	}
     	else
     	{
     		table[key1] = new HashNode(key, value);
@@ -115,7 +118,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     @Override
     public boolean isEmpty() {
         
-        return numItems>0;
+        return !(numItems>0);
     }
 
     @Override
@@ -130,7 +133,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         	}
         }
     	V temp = (V) table[key1].getValue();
-    	table[key1] = new HashNode((K)"SENTINEL", (V)"SENTINEL"); 
+    	table[key1] = new HashNode(Integer.MAX_VALUE,"-"); 
     	numItems--;
         return temp;
     }
