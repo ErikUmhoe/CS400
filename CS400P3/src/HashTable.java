@@ -5,9 +5,9 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     /* Instance variables and constructors
      */
 
-	HashNode[] table;
+	HashNode[] table;	//The hash table
 	int maxEntries;
-	int numItems;
+	int numItems;		//Current number of items in the table
 	
 	public HashTable(int initialCapacity, double loadFactor)
 	{
@@ -42,7 +42,6 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	else
     	{
     		table[key1] = new HashNode(key, value);
-    		System.out.println("Hash Index: " + key1);
     	}
     	
     	return (V) table[key1].getValue();
@@ -69,7 +68,6 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 				int key1 = hashFunction((K) table[i].getKey());
 				if(temp[key1] != null)
 				{
-					 key1++;
 					 while(temp[key1] != null)
 					   {
 						   
@@ -101,10 +99,10 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         if(table[key1].getKey() == key)
         	return (V) table[key1].getValue();
         else{
-        	key1++;
         	while(table[key1].getKey() != key)
         	{
         		key1++;
+        		key1 %= maxEntries;
         	}
         	return (V) table[key1].getValue();
         }
@@ -126,10 +124,10 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
        
     	int key1 = hashFunction(key);
     	if(table[key1].getKey() != key){
-        	key1++;
         	while(table[key1].getKey() != key)
         	{
         		key1++;
+        		key1 %= maxEntries;
         	}
         }
     	V temp = (V) table[key1].getValue();
@@ -160,7 +158,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	{
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
-    	
+    	key1 = Math.abs(key1);
     	return key1 % maxEntries;
     }
     
@@ -178,7 +176,6 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 		   key1 ++;
 		   key1 = key1%maxEntries;
 	   }
-	   System.out.println("Hash Index: " + key1);
 	   table[key1] = new HashNode(key, value);
    }
    

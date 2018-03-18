@@ -64,11 +64,7 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     		hash.put(s, s);
     	long endTimeHash = System.currentTimeMillis();
     	
-    	System.out.println("Time of a TreeMap to insert " + 
-    	inputData.size() + " items: " + (endTimeTree - startTimeTree));
-    	
-    	System.out.println("Time of a Hash Table to insert " + 
-    	    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
+
     	report("PUT", "HASHTABLE", (endTimeHash - startTimeHash), 0);
     	report("PUT", "TREEMAP", (endTimeTree - startTimeTree), 0);
    
@@ -85,7 +81,10 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	long startTimeTree = System.currentTimeMillis();
     	
     	while(!treemap.isEmpty())
+    	{
     		treemap.remove(inputData.get(i));
+    		i++;
+    	}
     	long endTimeTree = System.currentTimeMillis();
     	
     	HashTable hash = new HashTable(1000,.8);
@@ -94,14 +93,13 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	i = 0;
     	long startTimeHash = System.currentTimeMillis();
     	while(!hash.isEmpty())
+    	{
     		hash.remove(inputData.get(i));
+    		i++;
+    	}
     	long endTimeHash = System.currentTimeMillis();
     	
-    	System.out.println("Time of a TreeMap to delete " + 
-    	    	inputData.size() + " items: " + (endTimeTree - startTimeTree));
-    	    	
-    	System.out.println("Time of a Hash Table to delete " + 
-    	    	inputData.size() + " items: " + (endTimeHash - startTimeHash));
+
     	report("REMOVE", "HASHTABLE", (endTimeHash - startTimeHash), 0);
     	report("REMOVE", "TREEMAP", (endTimeTree - startTimeTree), 0);
     	
@@ -109,7 +107,24 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
 
     @Override
     public void compareSearch() {
-        //TODO: Complete this method
+       TreeMap treemap = new TreeMap();
+       for(String s : inputData)
+       	{
+   			treemap.put(s, s);
+   		}
+       long startTimeTree = System.currentTimeMillis();
+       treemap.get(inputData.get(4));
+       long endTimeTree = System.currentTimeMillis();
+       
+       HashTable hash = new HashTable(1000,.8);
+	   	for(String s : inputData)
+	   		hash.put(s, s);
+	   	long startTimeHash = System.currentTimeMillis();
+	   	hash.get(inputData.get(4));
+	   	long endTimeHash = System.currentTimeMillis();
+	   	report("REMOVE", "HASHTABLE", (endTimeHash - startTimeHash), 0);
+    	report("REMOVE", "TREEMAP", (endTimeTree - startTimeTree), 0);
+       
     }
 
     /*
