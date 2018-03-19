@@ -167,7 +167,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(table[key1] != null && table[key1].getKey() != key)
     	{
     		int counter = 0;
-        	while(table[key1].getKey() != key)
+        	while(table[key1] != null && table[key1].getKey() != key)
         	{
         		key1++;
         		key1 %= table.length;
