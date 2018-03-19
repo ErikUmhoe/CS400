@@ -164,7 +164,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(key == null)
     		throw new NullPointerException();
     	int key1 = hashFunction(key);
-    	if(table[key1].getKey() != key)
+    	if(table[key1] != null && table[key1].getKey() != key)
     	{
     		int counter = 0;
         	while(table[key1].getKey() != key)
