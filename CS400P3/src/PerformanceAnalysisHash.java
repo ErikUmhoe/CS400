@@ -80,25 +80,25 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	Runtime rt = Runtime.getRuntime();
     	
     	long startTimeTree = System.currentTimeMillis();
-    	long startMemTree = rt.totalMemory();
+    	long startMemTree = rt.freeMemory();
     	treemap = new TreeMap();
     	for(String s : inputData)
     		treemap.put(s, s);
     	long endTimeTree = System.currentTimeMillis();
-    	long endMemTree = rt.totalMemory();
+    	long endMemTree = rt.freeMemory();
     	
     	long startTimeHash = System.currentTimeMillis();
-    	long startMemHash = rt.totalMemory();
+    	long startMemHash = rt.freeMemory();
     	hash = new HashTable(10000,.7);
     	for(String s : inputData)
     	{
     		System.out.println(hash.put(s, s));
     	}
     	long endTimeHash = System.currentTimeMillis();
-    	long endMemHash = rt.totalMemory();
+    	long endMemHash = rt.freeMemory();
     	
-    	report("PUT", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), (endMemHash - startMemHash));
-    	report("PUT", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), (endMemTree - startMemTree));
+    	report("PUT", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), Math.abs((endMemHash - startMemHash)));
+    	report("PUT", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), Math.abs((endMemTree - startMemTree)));
    
     }
     
@@ -115,28 +115,28 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
 
     	int i = 0;
     	long startTimeTree = System.currentTimeMillis();
-    	long startMemTree = rt.totalMemory();
+    	long startMemTree = rt.freeMemory();
     	while(!treemap.isEmpty())
     	{
     		treemap.remove(inputData.get(i));
     		i++;
     	}
     	long endTimeTree = System.currentTimeMillis();
-    	long endMemTree = rt.totalMemory();
+    	long endMemTree = rt.freeMemory();
     	
     	i = 0;
     	long startTimeHash = System.currentTimeMillis();
-    	long startMemHash = rt.totalMemory();
+    	long startMemHash = rt.freeMemory();
     	while(!hash.isEmpty())
     	{
     		System.out.println(hash.remove(inputData.get(i)));
     		i++;
     	}
     	long endTimeHash = System.currentTimeMillis();
-    	long endMemHash = rt.totalMemory();
+    	long endMemHash = rt.freeMemory();
     	
-    	report("REMOVE", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), (endMemHash - startMemHash));
-    	report("REMOVE", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), (endMemTree - startMemTree));
+    	report("REMOVE", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), Math.abs((endMemHash - startMemHash)));
+    	report("REMOVE", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), Math.abs((endMemTree - startMemTree)));
     	
     }
 
@@ -153,19 +153,19 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	String random = inputData.get((int)(Math.random() * inputData.size()));
 
     	long startTimeTree = System.currentTimeMillis();
-    	long startMemTree = rt.totalMemory();
+    	long startMemTree = rt.freeMemory();
     	treemap.get(random);
     	long endTimeTree = System.currentTimeMillis();
-    	long endMemTree = rt.totalMemory();
+    	long endMemTree = rt.freeMemory();
 
     	long startTimeHash = System.currentTimeMillis();
-    	long startMemHash = rt.totalMemory();
+    	long startMemHash = rt.freeMemory();
     	hash.get(random);
     	long endTimeHash = System.currentTimeMillis();
-    	long endMemHash = rt.totalMemory();
+    	long endMemHash = rt.freeMemory();
 
-    	report("GET", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), (endMemHash - startMemHash));
-    	report("GET", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), (endMemTree - startMemTree));
+    	report("GET", "HASHTABLE", ((endTimeHash - startTimeHash) * 1000), Math.abs((endMemHash - startMemHash)));
+    	report("GET", "TREEMAP", ((endTimeTree - startTimeTree) * 1000), Math.abs((endMemTree - startMemTree)));
 
     }
 
