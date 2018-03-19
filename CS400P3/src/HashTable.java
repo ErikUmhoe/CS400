@@ -1,3 +1,17 @@
+// HashTable
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS400 Spring 2018
+// PROJECT:          P3
+// FILES:            HashTable.java
+//                   PerformanceAnalysisHash.java
+//
+// USER:             Erik Umhoefer and Nick Stoffel
+//
+// Instructor:       Deb Deppeler (deppeler@cs.wisc.edu)
+// Bugs:             no known bugs
+//
+// 2018 Mar 18, 2018 10:25:34 PM HashTable.java
+//////////////////////////// 80 columns wide //////////////////////////////////
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -6,29 +20,39 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     /* Instance variables and constructors
      */
 
-	HashNode[] table;	//The hash table
-	int maxEntries;
-	int numItems;		//Current number of items in the table
-	double loadFactor;
+	HashNode[] table;	// The hash table.
+	int maxEntries;		// Max number of items allowed in the array.
+	int numItems;		// Current number of items in the table.
+	double loadFactor;	// Used to calculate maxEntries.
 	
-	public HashTable(int initialCapacity, double loadFactor)
-	{
+	/**
+	 * Constructor for a hashtable with given initial capacity
+	 * and load factor.
+	 * 
+	 * @param initialCapacity: The initial size of the array.
+	 * @param loadFactor: The percentage of items allowed in the array.
+	 */
+	public HashTable(int initialCapacity, double loadFactor) {
+		
 		table = new HashNode[initialCapacity];
-		this.loadFactor = loadFactor;
 		maxEntries = (int) (initialCapacity * loadFactor);
 		numItems = 0;
+		this.loadFactor = loadFactor;
 	}
 	
 	
 	/**
-    *
-    * @param key : The key that goes into the hashtable
-    * @param value: The Value associated with the key
-    * @return value of the key added to the hashtable,
-    *      throws NullPointerException if key is null
-    */
+	 * Puts a value into the hashtable based on the key given.
+	 * Expands the table when the number of items is >= maxEntries.
+	 *
+	 * @param key: The key that goes into the hashtable.
+	 * @param value: The Value associated with the key.
+	 * @return Value of the key added to the hashtable,
+	 *      throws NullPointerException if key is null.
+	 */
 	@Override
     public V put(K key, V value) {
+		
     	if(key == null)
     		throw new NullPointerException();
     	numItems++;
@@ -40,29 +64,21 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(table[key1] != null)
     	{
     		if(!table[key1].getKey().equals("SENTINEL"))
-    			handleCollision(key, value);
+    			key1 = handleCollision(key, value);
     	}
-    	else
-    	{
-    		table[key1] = new HashNode(key, value);
-    	}
+    	table[key1] = new HashNode(key, value);
     	
     	return (V) table[key1].getValue();
-    	
-    	
-    	
         
     }
 
-    /*
-     * Expands the table to be tablesize * 2 + 1 (approx. next prime number)
-     * Then rehashes all the values and assigns them into the new hashtable
-     */
+	/**
+	 * Expands the table to be tablesize * 2 + 1 (approx. next prime number).
+	 * Then rehashes all the values and assigns them into the new hashtable.
+	 */
     private void expandTable() {
+    	
 		HashNode[] temp = new HashNode[table.length * 2 + 1];
-		maxEntries = (int) (table.length*loadFactor);
-		
-		
 		
 		for(int i = 0; i < table.length; i++)
 		{
@@ -75,7 +91,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 					   {
 						   
 						   key1++;
-						   key1 = key1%table.length;
+						   key1 %= table.length;
 					   }
 				
 				}
@@ -83,27 +99,28 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 			}
 		}
 		table = temp;
+		maxEntries = (int) (table.length * loadFactor);
 	}
 
     /**
-     * Clear the hashtable of all its contents
+     * Clear the hashtable of all its contents.
      */
     @Override
     public void clear() {
       for(int i = 0; i < table.length; i++)
-      {
     	  table[i] =  null;
-      }
     }
-
     
     /**
-     * @param key: The key for which the value is returned
+     * Gets a value base on a given key.
+     * 
+     * @param key: The key for which the value is returned.
      * @return The value associated with the key,
-     *          else throws NoSuch Element Exception
+     *          else throws NoSuch Element Exception.
      */
     @Override
     public V get(K key) {
+    	
         int key1 = hashFunction(key);
         if(table[key1].getKey() == key)
         	return (V) table[key1].getValue();
@@ -116,7 +133,6 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         		counter++;
         		if(counter > table.length)
         			throw new NoSuchElementException();
-        		
         	}
         	return (V) table[key1].getValue();
         }
@@ -124,30 +140,32 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     }
     
     /**
-     * Checks if the hashtable is empty
-     * @return true : if Empty, else False
+     * Checks if the hashtable is empty.
+     * 
+     * @return True if Empty, else False.
      */
     @Override
     public boolean isEmpty() {
-        
         return !(numItems>0);
     }
-    
-    /*
-     *  /**
+
+   
+     /**
+     * Removes a given value from the hashtable.
      *
-     * @param key: Key of the entry to be removed
+     * @param key: Key of the entry to be removed.
      * @return value: Value of the key-value pair removed,
-     *          null if key did not have a mapping
-     * @throws NullPointerException if key is null
+     *          null if key did not have a mapping.
+     * @throws NullPointerException: If key is null.
      */
     @Override
     public V remove(K key) {
-       
+    	
     	if(key == null)
     		throw new NullPointerException();
     	int key1 = hashFunction(key);
-    	if(table[key1].getKey() != key){
+    	if(table[key1].getKey() != key)
+    	{
     		int counter = 0;
         	while(table[key1].getKey() != key)
         	{
@@ -164,25 +182,27 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         return temp;
     }
 
-    /*
-     * @return int is the size of the table
+    /**
+     * Returns the amount of items in the hash table.
+     * 
+     * @return int: The size of the table.
      */
     @Override
     public int size() {
-       
         return numItems;
     }
     
     
-    /*
-     * @param key is the key of the item to be inserted into the hashtable
-     * @return is an integer hash index / location of the item in the hash table
+    /**
      * Takes the toString of the key and creates a hashcode by extracting each character's
      * ASCII code and multiplying it by increasing powers of two, then folding these parts
-     * and dividing it by the maxEntries / table size to ensure proper wrapping
+     * and taking the modulus of the parts by the table size to ensure proper wrapping.
+     * 
+     * @param key: The key of the item to be inserted into the hashtable.
+     * @return An integer hash index / location of the item in the hash table.
      */
-    private int hashFunction(K key)
-    {
+    private int hashFunction(K key) {
+    	
     	String str = key.toString();
     	int key1 = 0;
     	for(int i = 0; i < str.length(); i++)
@@ -193,50 +213,43 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	return key1 % table.length;
     }
     
-   /*
-    * Helper method for put(K key, V value) - handles collisions by double hashing
-    * @param key is the key of the item to be inserted into the hash table
-    * @param value is the value of the item to be inserted into the hash table
-    */
-   private void handleCollision(K key, V value)
-   {
+    /**
+     * Helper method for put(K key, V value) - handles collisions by linear probing.
+     * 
+     * @param key: The key of the item to be inserted into the hash table.
+     * @param value: The value of the item to be inserted into the hash table.
+     */
+   private int handleCollision(K key, V value) {
+	   
 	   int key1 = hashFunction(key);
 	   while(table[key1] != null)
 	   {
-		   
 		   key1 ++;
-		   key1 = key1%table.length;
+		   key1 %= table.length;
 	   }
-	   table[key1] = new HashNode(key, value);
+	   return key1;
    }
-   
-
 }
-//Hashnode class - each node has a Key and a Value
-class HashNode<K,V>
-{
+   
+/**
+ * Hashnode class where each node has a key and a value.
+ *
+ * @param <K>: Key
+ * @param <V>: Value
+ */
+class HashNode<K,V> {
 	K key;
 	V value;
-	public HashNode(K key, V value)
-	{
+	public HashNode(K key, V value) {
 		this.key = key;
 		this.value = value;
 	}
 	
-	/*
-	 * @return is the key of the node
-	 */
-	public K getKey()
-	{
+	public K getKey() {
 		return key;
 	}
-	/*
-	 * @return is the value of the node
-	 */
-	public V getValue()
-	{
+	
+	public V getValue() {
 		return value;
 	}
 }
-
-
