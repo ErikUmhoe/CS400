@@ -9,11 +9,13 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	HashNode[] table;	//The hash table
 	int maxEntries;
 	int numItems;		//Current number of items in the table
+	double loadFactor;
 	
 	public HashTable(int initialCapacity, double loadFactor)
 	{
 		table = new HashNode[initialCapacity];
-		maxEntries = initialCapacity;
+		this.loadFactor = loadFactor;
+		maxEntries = (int) (initialCapacity * loadFactor);
 		numItems = 0;
 	}
 	
@@ -58,7 +60,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
      */
     private void expandTable() {
 		HashNode[] temp = new HashNode[table.length * 2 + 1];
-		maxEntries = maxEntries * 2 + 1;
+		maxEntries = (int) (table.length*loadFactor);
 		
 		
 		
@@ -73,7 +75,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 					   {
 						   
 						   key1++;
-						   key1 = key1%maxEntries;
+						   key1 = key1%table.length;
 					   }
 				
 				}
@@ -110,7 +112,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         	while(table[key1].getKey() != key)
         	{
         		key1++;
-        		key1 %= maxEntries;
+        		key1 %= table.length;
         		counter++;
         		if(counter > table.length)
         			throw new NoSuchElementException();
@@ -145,13 +147,12 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     	if(key == null)
     		throw new NullPointerException();
     	int key1 = hashFunction(key);
-    	if(table[key1].getKey() != key)
-    	{
+    	if(table[key1].getKey() != key){
     		int counter = 0;
         	while(table[key1].getKey() != key)
         	{
         		key1++;
-        		key1 %= maxEntries;
+        		key1 %= table.length;
         		counter++;
         		if(counter > table.length)
         			throw new NoSuchElementException();
@@ -189,7 +190,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
     		key1 +=  (int) ((int)(str.charAt(i)) * Math.pow(2, i));
     	}
     	key1 = Math.abs(key1);
-    	return key1 % maxEntries;
+    	return key1 % table.length;
     }
     
    /*
@@ -204,7 +205,7 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	   {
 		   
 		   key1 ++;
-		   key1 = key1%maxEntries;
+		   key1 = key1%table.length;
 	   }
 	   table[key1] = new HashNode(key, value);
    }

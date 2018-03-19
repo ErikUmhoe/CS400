@@ -10,6 +10,8 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     private ArrayList<String> files;
     private ArrayList<String> reports;
     private String curFile;
+    private HashTable hash;
+    private TreeMap treemap;
     
     public PerformanceAnalysisHash() throws IOException{
     	reports = new ArrayList<>();
@@ -58,16 +60,21 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	
     	Runtime rt = Runtime.getRuntime();
     	long startTimeTree = System.currentTimeMillis();
-    	TreeMap treemap = new TreeMap();
+    	treemap = new TreeMap();
     	for(String s : inputData)
     	{
     		treemap.put(s, s);
     	}
     	long endTimeTree = System.currentTimeMillis();
     	long startTimeHash = System.currentTimeMillis();
-    	HashTable hash = new HashTable(10,.7);
+    	hash = new HashTable(100000,.8);
+    	int i = 0;
     	for(String s : inputData)
+    	{
     		hash.put(s, s);
+    		System.out.println(i+": " +s);
+    		i++;
+    	}
     	long endTimeHash = System.currentTimeMillis();
     	
 
@@ -83,11 +90,6 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
      */
     @Override
     public void compareDeletion() {
-    	TreeMap treemap = new TreeMap();
-    	for(String s : inputData)
-    	{
-    		treemap.put(s, s);
-    	}
     	int i = 0;
     	long startTimeTree = System.currentTimeMillis();
     	
@@ -98,14 +100,11 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	}
     	long endTimeTree = System.currentTimeMillis();
     	
-    	HashTable hash = new HashTable(1000,.8);
-    	for(String s : inputData)
-    		hash.put(s, s);
     	i = 0;
     	long startTimeHash = System.currentTimeMillis();
     	while(!hash.isEmpty())
     	{
-    		hash.remove(inputData.get(i));
+    		System.out.println(hash.remove(inputData.get(i)));
     		i++;
     	}
     	long endTimeHash = System.currentTimeMillis();
@@ -125,18 +124,10 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
      */
     @Override
     public void compareSearch() {
-       TreeMap treemap = new TreeMap();
-       for(String s : inputData)
-       	{
-   			treemap.put(s, s);
-   		}
        long startTimeTree = System.currentTimeMillis();
        treemap.get(inputData.get(4));
        long endTimeTree = System.currentTimeMillis();
        
-       HashTable hash = new HashTable(1000,.8);
-	   	for(String s : inputData)
-	   		hash.put(s, s);
 	   	long startTimeHash = System.currentTimeMillis();
 	   	hash.get(inputData.get(4));
 	   	long endTimeHash = System.currentTimeMillis();
