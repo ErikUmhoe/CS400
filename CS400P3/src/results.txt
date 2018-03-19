@@ -24,6 +24,6 @@ The report name : Performance Analysis Report
 |     StringLarge.txt|            PUT|        TREEMAP|                   120000|       18633920|
 |     StringLarge.txt|            GET|      HASHTABLE|                        0|              0|
 |     StringLarge.txt|            GET|        TREEMAP|                        0|              0|
-|     StringLarge.txt|         REMOVE|      HASHTABLE|                  6720000|       13416343|
+|     StringLarge.txt|         REMOVE|      HASHTABLE|                  6720000|       12316343|
 |     StringLarge.txt|         REMOVE|        TREEMAP|                    58000|              0|
 ------------------------------------------------------------------------------------------------
