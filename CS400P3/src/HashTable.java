@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class HashTable<K, V> implements HashTableADT<K, V> {
     /* Instance variables and constructors
@@ -93,16 +94,27 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
       }
     }
 
+    
+    /**
+     * @param key: The key for which the value is returned
+     * @return The value associated with the key,
+     *          else throws NoSuch Element Exception
+     */
     @Override
     public V get(K key) {
         int key1 = hashFunction(key);
         if(table[key1].getKey() == key)
         	return (V) table[key1].getValue();
         else{
+        	int counter = 0;
         	while(table[key1].getKey() != key)
         	{
         		key1++;
         		key1 %= maxEntries;
+        		counter++;
+        		if(counter > table.length)
+        			throw new NoSuchElementException();
+        		
         	}
         	return (V) table[key1].getValue();
         }
@@ -118,16 +130,31 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         
         return !(numItems>0);
     }
-
+    
+    /*
+     *  /**
+     *
+     * @param key: Key of the entry to be removed
+     * @return value: Value of the key-value pair removed,
+     *          null if key did not have a mapping
+     * @throws NullPointerException if key is null
+     */
     @Override
     public V remove(K key) {
        
+    	if(key == null)
+    		throw new NullPointerException();
     	int key1 = hashFunction(key);
-    	if(table[key1].getKey() != key){
+    	if(table[key1].getKey() != key)
+    	{
+    		int counter = 0;
         	while(table[key1].getKey() != key)
         	{
         		key1++;
         		key1 %= maxEntries;
+        		counter++;
+        		if(counter > table.length)
+        			throw new NoSuchElementException();
         	}
         }
     	V temp = (V) table[key1].getValue();
@@ -136,6 +163,9 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         return temp;
     }
 
+    /*
+     * @return int is the size of the table
+     */
     @Override
     public int size() {
        
@@ -179,22 +209,9 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
 	   table[key1] = new HashNode(key, value);
    }
    
-   /*
-    * @param key is the key of the value to be inserted into the hashtable
-    * @return is the integer hash index / table index of the item inserted
-    * Creates a hash index by doing the algorithm of hashFunction(K key) in reverse order
-    */
-//   private int secondHashFunction(K key)
-//   {
-//	   String str = key.toString();
-//	   int key1 = 0;
-//	   for(int i = str.length()-1; i >= 0; i--)
-//	   {
-//		   key1+= (int)((int)str.charAt(i) * Math.pow(2, i));
-//	   }
-//	   return key1 % maxEntries;
-//   }
+
 }
+//Hashnode class - each node has a Key and a Value
 class HashNode<K,V>
 {
 	K key;
@@ -205,11 +222,16 @@ class HashNode<K,V>
 		this.value = value;
 	}
 	
+	/*
+	 * @return is the key of the node
+	 */
 	public K getKey()
 	{
 		return key;
 	}
-	
+	/*
+	 * @return is the value of the node
+	 */
 	public V getValue()
 	{
 		return value;

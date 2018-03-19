@@ -23,7 +23,7 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     }
 
     public PerformanceAnalysisHash(String details_filename){
-        //TODO: Save the details of the test data files
+        
     }
     @Override
     public void compareDataStructures() {
@@ -46,7 +46,13 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
         System.out.println("-----------------------------------------------"
         		+ "-------------------------------------------------");
     }
-
+    
+    /**
+     * Standalone method for comparing insertion operation
+     * across HashTable and TreeMap
+     * Compares insertion by comparing time / memory of filling
+     * a TreeMap vs a Hashtable
+     */
     @Override
     public void compareInsertion(){
     	
@@ -69,7 +75,12 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	report("PUT", "TREEMAP", (endTimeTree - startTimeTree), 0);
    
     }
-
+    /**
+     * Standalone method for comparing deletion operation
+     * across HashTable and TreeMap
+     * Compares deletion by filling a TreeMap and HashTable then 
+     * comparing time it takes to delete all of the elements
+     */
     @Override
     public void compareDeletion() {
     	TreeMap treemap = new TreeMap();
@@ -105,6 +116,13 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
     	
     }
 
+    
+    /**
+     * Standalone method for comparing search operation
+     * across HashTable and TreeMap
+     * Compares search by filling a TreeMap and HashTable
+     * and comparing times to retrieve an element
+     */
     @Override
     public void compareSearch() {
        TreeMap treemap = new TreeMap();
@@ -163,6 +181,12 @@ public class PerformanceAnalysisHash implements PerformanceAnalysis {
         files.remove(0);
     }
     
+    /*
+     * @param op is the operation performed (delete / search insert)
+     * @param ds is the description of the operation
+     * @param time is the time the operation took to occur
+     * @param is the amount of memory used in the operation
+     */
     private void report(String op, String ds, long time, long mem)
     {
     	String report = "|";
