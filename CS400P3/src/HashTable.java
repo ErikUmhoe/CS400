@@ -176,7 +176,9 @@ public class HashTable<K, V> implements HashTableADT<K, V> {
         			throw new NoSuchElementException();
         	}
         }
-    	V temp = (V) table[key1].getValue();
+    	V temp = null;
+    	if(table[key1] != null)
+    		temp = (V) table[key1].getValue();
     	table[key1] = new HashNode(Integer.MAX_VALUE,"-"); 
     	numItems--;
         return temp;
