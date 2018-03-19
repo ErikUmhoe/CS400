@@ -8,11 +8,11 @@ The report name : Performance Analysis Report
 |    IntegerSmall.txt|            GET|        TREEMAP|                        0|              0|
 |    IntegerSmall.txt|         REMOVE|      HASHTABLE|                     1000|              0|
 |    IntegerSmall.txt|         REMOVE|        TREEMAP|                        0|              0|
-|    IntegerLarge.txt|            PUT|      HASHTABLE|                 49327000|              0|
+|    IntegerLarge.txt|            PUT|      HASHTABLE|               4932713000|      110251241|
 |    IntegerLarge.txt|            PUT|        TREEMAP|                 15965000|      104264472|
 |    IntegerLarge.txt|            GET|      HASHTABLE|                     1000|              0|
 |    IntegerLarge.txt|            GET|        TREEMAP|                        0|              0|
-|    IntegerLarge.txt|         REMOVE|      HASHTABLE|                805427000|      102265848|
+|    IntegerLarge.txt|         REMOVE|      HASHTABLE|               6805427000|      102265848|
 |    IntegerLarge.txt|         REMOVE|        TREEMAP|                 15066000|              0|
 |     StringSmall.txt|            PUT|      HASHTABLE|                     1000|              0|
 |     StringSmall.txt|            PUT|        TREEMAP|                        0|              0|
@@ -20,10 +20,10 @@ The report name : Performance Analysis Report
 |     StringSmall.txt|            GET|        TREEMAP|                        0|              0|
 |     StringSmall.txt|         REMOVE|      HASHTABLE|                     1000|              0|
 |     StringSmall.txt|         REMOVE|        TREEMAP|                        0|              0|
-|     StringLarge.txt|            PUT|      HASHTABLE|                  8301000|              0|
+|     StringLarge.txt|            PUT|      HASHTABLE|                 38301000|       13416343|
 |     StringLarge.txt|            PUT|        TREEMAP|                   120000|       18633920|
 |     StringLarge.txt|            GET|      HASHTABLE|                        0|              0|
 |     StringLarge.txt|            GET|        TREEMAP|                        0|              0|
-|     StringLarge.txt|         REMOVE|      HASHTABLE|                   720000|              0|
+|     StringLarge.txt|         REMOVE|      HASHTABLE|                  6720000|       13416343|
 |     StringLarge.txt|         REMOVE|        TREEMAP|                    58000|              0|
 ------------------------------------------------------------------------------------------------
